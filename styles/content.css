@@ -1,0 +1,36 @@
+.altWalmartBalanceBox {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 500px;
+  background-color: #fff;
+  z-index: 9999;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  padding: 20px;
+}
+
+.altWalmartBalanceBox > .title {
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.altWalmartBalanceBox > .content:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.altWalmartBalanceBox > .content > .label {
+  font-size: 14px;
+  color: #999;
+  width: unset;
+  height: unset;
+  padding: unset;
+  background-color: unset;
+  border: unset;
+  text-align: unset;
+}
+
+.altWalmartBalanceBox > .content > .label {
+  word-break: break-all;
+}
