@@ -6,6 +6,8 @@ const getCurrentTabId = (callback) => {
 
 export const sendMessageToTab = (tabIndex, message) => {
   getCurrentTabId((tabs) => {
-    chrome.tabs.sendMessage(tabs[tabIndex].id, message);
+    chrome.tabs.sendMessage(tabs[tabIndex].id, message).catch((err) => {
+      console.log(err);
+    });
   });
 };
