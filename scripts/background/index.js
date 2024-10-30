@@ -1,7 +1,7 @@
 import {
-  BALANCE_ALARM_NAME,
-  SYNC_STATUS_MESSAGE_KEY,
   BALANCE_API_URL,
+  UPDATE_VIEW_DATA,
+  GET_VIEW_DATA,
 } from './constants.js';
 import {
   createBalanceMonitor,
@@ -9,47 +9,26 @@ import {
   updateBalance,
 } from './getBalance.js';
 
-// 同步插件的状态
-const syncPluginStatus = async () => {
-  const alarm = await chrome.alarms.get(BALANCE_ALARM_NAME);
-  if (typeof alarm === 'undefined') {
-    await chrome.action.setBadgeText({
-      text: 'OFF',
-    });
-  } else {
-    await chrome.action.setBadgeText({
-      text: 'ON',
-    });
-  }
-};
-
 // 插件初始化，设置成OFF
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.action.setBadgeText({
-    text: 'OFF',
-  });
   removeBalanceMonitor();
+  createBalanceMonitor();
 });
 
-// 点击插件图标，切换ON 和 OFF
-chrome.action.onClicked.addListener(async (tab) => {
-  const prevState = await chrome.action.getBadgeText({ tabId: tab.id });
-  const nextState = prevState === 'ON' ? 'OFF' : 'ON';
-  if (nextState === 'ON') {
-    createBalanceMonitor();
-  } else {
-    removeBalanceMonitor();
+chrome.runtime.onMessage.addListener((data) => {
+  const { type } = data;
+  if (type === UPDATE_VIEW_DATA) {
+    chrome.storage.local.set({
+      VIEW_DATA: data.data,
+    });
   }
-  await chrome.action.setBadgeText({
-    tabId: tab.id,
-    text: nextState,
-  });
-});
-
-// 同步插件的状态
-chrome.runtime.onMessage.addListener(({ type }, _sender) => {
-  if (type === SYNC_STATUS_MESSAGE_KEY) {
-    syncPluginStatus();
+  if (type === GET_VIEW_DATA) {
+    chrome.storage.local.get(['VIEW_DATA'], (result) => {
+      chrome.runtime.sendMessage({
+        type: GET_VIEW_DATA,
+        data: result.VIEW_DATA,
+      });
+    });
   }
 });
 

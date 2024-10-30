@@ -4,10 +4,12 @@ export const BALANCE_ALARM_NAME = 'BALANCE_ALARM_NAME';
 export const BALANCE_TAB_INDEX = 0;
 // 获取金额的通知KEY
 export const GET_BALANCE_MESSAGE_KEY = 'GET_BALANCE';
-// 同步插件的状态的通知KEY
-export const SYNC_STATUS_MESSAGE_KEY = 'SYNC_STATUS';
 // 刷新的通知KEY
 export const REFRESH_KEY = 'REFRESH';
+// 更新数据KEY
+export const UPDATE_VIEW_DATA = 'UPDATE_VIEW_DATA';
+// 获取数据KEY
+export const GET_VIEW_DATA = 'GET_VIEW_DATA';
 
 // 余额请求URL
 export const BALANCE_API_URL =

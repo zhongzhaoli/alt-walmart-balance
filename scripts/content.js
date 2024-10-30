@@ -3,10 +3,10 @@ const SELECTOR_CONDITION = '[data-automation-id="accountBalance"]';
 
 // 获取金额的通知KEY
 const GET_BALANCE_MESSAGE_KEY = 'GET_BALANCE';
-// 同步插件的状态的通知KEY
-const SYNC_STATUS_MESSAGE_KEY = 'SYNC_STATUS';
 // 刷新的通知KEY
 const REFRESH_KEY = 'REFRESH';
+// 更新数据KEY
+const UPDATE_VIEW_DATA = 'UPDATE_VIEW_DATA';
 
 // 后端请求API
 const UPDATE_BALANCE_API =
@@ -56,28 +56,13 @@ const fetchBalance = (balance) => {
       const { code, data } = responseBody;
       const createTime = new Date();
       if (code === 200) {
-        setStatusBoxValue(
-          balance,
-          createTime,
-          'success',
-          JSON.stringify(responseBody)
-        );
+        saveData(balance, createTime, 'success', JSON.stringify(responseBody));
       } else {
-        setStatusBoxValue(
-          balance,
-          createTime,
-          'failed',
-          JSON.stringify(responseBody)
-        );
+        saveData(balance, createTime, 'failed', JSON.stringify(responseBody));
       }
     })
     .catch((err) => {
-      setStatusBoxValue(
-        balance,
-        createTime,
-        'failed',
-        JSON.stringify(responseBody)
-      );
+      saveData(balance, createTime, 'failed', JSON.stringify(responseBody));
     });
 };
 
@@ -98,58 +83,15 @@ const getStoreId = () => {
   return storeId;
 };
 
-// 状态显示框
-const createStatusBox = () => {
-  const bigBox = document.createElement('div');
-  bigBox.className = 'altWalmartBalanceBox';
-  // Title
-  const title = document.createElement('div');
-  title.className = 'title';
-  title.innerHTML = 'Walmart Balance Monitor';
-  bigBox.appendChild(title);
-  // 内容项
-  const contentList = [
-    { title: '上次获取金额：', key: 'price' },
-    { title: '上次获取时间：', key: 'createTime' },
-    { title: '上次请求结果：', key: 'responseStatus' },
-    { title: '上次请求响应数据：', key: 'responseText' },
-  ];
-  contentList.forEach((item) => {
-    const content = document.createElement('div');
-    content.className = 'content';
-
-    // label
-    const label = document.createElement('span');
-    label.className = 'label';
-    label.innerHTML = item.title;
-    content.appendChild(label);
-    // value
-    const value = document.createElement('span');
-    value.className = 'value';
-    value.id = `altWalmartBalance_${item.key}`;
-    value.innerHTML = '暂无';
-    content.appendChild(value);
-
-    bigBox.appendChild(content);
-  });
-  document.body.appendChild(bigBox);
-};
-
-// 状态显示框 - content
-const setStatusBoxValue = (price, time, responseStatus, responseText) => {
-  document.getElementById('altWalmartBalance_price').innerHTML = price;
-  document.getElementById('altWalmartBalance_createTime').innerHTML = time;
-  document.getElementById('altWalmartBalance_responseStatus').innerHTML =
-    responseStatus;
-  document.getElementById('altWalmartBalance_responseText').innerHTML =
-    responseText;
-};
-
-window.onload = () => {
-  // 同步插件的状态
+// 保存数据
+const saveData = (price, time, responseStatus, responseText) => {
   chrome.runtime.sendMessage({
-    type: SYNC_STATUS_MESSAGE_KEY,
+    type: UPDATE_VIEW_DATA,
+    data: {
+      price,
+      time,
+      responseStatus,
+      responseText,
+    },
   });
 };
-
-createStatusBox();
