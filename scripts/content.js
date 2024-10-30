@@ -48,7 +48,7 @@ const fetchBalance = (balance) => {
     mode: 'cors',
     body: JSON.stringify({
       shop_id: Number(storeId),
-      balance: String(balance),
+      balance: parseFloat(balance),
     }),
   })
     .then(async (res) => {
