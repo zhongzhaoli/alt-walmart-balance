@@ -13,13 +13,14 @@ const UPDATE_BALANCE_API =
   'https://altoa.api.altspicerver.com/v1/walmart_api/edit/shop/balance';
 
 // 是否收到信息要更新金额
-chrome.runtime.onMessage.addListener(async (data) => {
+chrome.runtime.onMessage.addListener((data, _sender, sendResponse) => {
   const { type } = data;
+  sendResponse('success');
+
   if (type === GET_BALANCE_MESSAGE_KEY) {
-    console.log(document.getElementsByTagName('script'));
     setTimeout(() => {
       fetchBalance(getBalance());
-    }, 1000);
+    }, 3000);
   }
   if (type === REFRESH_KEY) {
     window.location.reload();
@@ -53,16 +54,22 @@ const fetchBalance = (balance) => {
   })
     .then(async (res) => {
       const responseBody = await res.json();
-      const { code, data } = responseBody;
-      const createTime = new Date();
+      const { code } = responseBody;
+      // 时间
+      var timezone = 8; //目标时区时间，东八区
+      var offset_GMT = new Date().getTimezoneOffset(); // 本地时间和格林威治的时间差，单位为分钟
+      var nowDate = new Date().getTime(); // 本地时间距 1970 年 1 月 1 日午夜（GMT 时间）之间的毫秒数
+      var targetDate = new Date(
+        nowDate + offset_GMT * 60 * 1000 + timezone * 60 * 60 * 1000
+      );
       if (code === 200) {
-        saveData(balance, createTime, 'success', JSON.stringify(responseBody));
+        saveData(balance, targetDate, 'success', JSON.stringify(responseBody));
       } else {
-        saveData(balance, createTime, 'failed', JSON.stringify(responseBody));
+        saveData(balance, targetDate, 'failed', JSON.stringify(responseBody));
       }
     })
     .catch((err) => {
-      saveData(balance, createTime, 'failed', JSON.stringify(responseBody));
+      saveData(balance, targetDate, 'failed', JSON.stringify(responseBody));
     });
 };
 
