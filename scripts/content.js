@@ -28,7 +28,10 @@ const getBalance = () => {
   const element = document.querySelector(SELECTOR_CONDITION);
   const num = element ? element.textContent : 0;
   if (num) {
-    return parseFloat(num.split(' ')[1].replace(/,/g, ''));
+    const isNegative = num.includes('-');
+    return parseFloat(
+      num.split(' ')[1].replace(/,/g, '') * (isNegative ? -1 : 1)
+    );
   } else {
     return null;
   }

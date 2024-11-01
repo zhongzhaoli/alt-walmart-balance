@@ -1,16 +1,21 @@
+import { WALMART_URL } from './constants.js';
+
 export const getCurrentTabId = (callback) => {
   chrome.tabs.query({}, function (tabs) {
-    if (callback) callback(tabs);
+    const newTabs = tabs.filter((tab) => tab.url.includes(WALMART_URL));
+    for (let tab of newTabs) {
+      callback(tab.id);
+    }
   });
 };
 
-export const sendMessageToTab = (tabIndex, message) => {
-  let timer = null;
+export const sendMessageToTab = (message) => {
   let num = 1;
+  let timer = null;
   timer = setInterval(() => {
-    getCurrentTabId(async (tabs) => {
+    getCurrentTabId(async (tabId) => {
       try {
-        const response = await chrome.tabs.sendMessage(tabs[tabIndex].id, {
+        const response = await chrome.tabs.sendMessage(tabId, {
           ...message,
           sendMessageNum: num,
         });
@@ -25,10 +30,10 @@ export const sendMessageToTab = (tabIndex, message) => {
   }, 1000);
 };
 
-export const refreshTab = (tabIndex) => {
-  getCurrentTabId(async (tabs) => {
+export const refreshTab = () => {
+  getCurrentTabId(async (tabId) => {
     try {
-      await chrome.tabs.reload(tabs[tabIndex].id);
+      await chrome.tabs.reload(tabId);
     } catch (err) {
       console.log(err);
     }
