@@ -7,9 +7,20 @@ const GET_VIEW_DATA = 'GET_VIEW_DATA';
 chrome.runtime.onMessage.addListener((data) => {
   const { type, data: tempData } = data;
   if (type === GET_VIEW_DATA) {
-    const { price, time, responseStatus, responseText } = tempData;
+    const {
+      price,
+      time,
+      alarmIsOpen,
+      sendMessageNum,
+      responseStatus,
+      responseText,
+    } = tempData;
     document.getElementById('altWalmartBalance_price').innerHTML = price;
     document.getElementById('altWalmartBalance_createTime').innerHTML = time;
+    document.getElementById('altWalmartBalance_alarmIsOpen').innerHTML =
+      alarmIsOpen;
+    document.getElementById('altWalmartBalance_sendMessageNum').innerHTML =
+      sendMessageNum;
     document.getElementById('altWalmartBalance_responseStatus').innerHTML =
       responseStatus;
     document.getElementById('altWalmartBalance_responseText').innerHTML =
