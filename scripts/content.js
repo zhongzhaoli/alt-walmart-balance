@@ -27,10 +27,14 @@ chrome.runtime.onMessage.addListener((data, _sender, sendResponse) => {
 const getBalance = () => {
   const element = document.querySelector(SELECTOR_CONDITION);
   const num = element ? element.textContent : 0;
+  let isNegative = false;
+  if (element && element.parentNode.children[0].textContent === '−') {
+    isNegative = true;
+  }
   if (num) {
-    const isNegative = num.includes('-');
-    return parseFloat(
-      num.split(' ')[1].replace(/,/g, '') * (isNegative ? -1 : 1)
+    return (
+      parseFloat(num.trim().split(' ')[1].replace(/,/g, '')) *
+      (isNegative ? -1 : 1)
     );
   } else {
     return null;
@@ -48,7 +52,7 @@ const fetchBalance = (balance, alarmIsOpen, createTime, sendMessageNum) => {
     mode: 'cors',
     body: JSON.stringify({
       shop_id: Number(storeId),
-      balance: parseFloat(balance),
+      balance,
     }),
   })
     .then(async (res) => {
@@ -124,3 +128,7 @@ const saveData = (
     },
   });
 };
+
+setTimeout(() => {
+  fetchBalance(getBalance(), true, false, 10);
+}, 2000);
