@@ -6,6 +6,8 @@ const GET_BALANCE_MESSAGE_KEY = 'GET_BALANCE';
 // 更新数据KEY
 const UPDATE_VIEW_DATA = 'UPDATE_VIEW_DATA';
 
+let isOnload = false;
+
 // 后端请求API
 const UPDATE_BALANCE_API =
   'https://altoa.api.altspicerver.com/v1/walmart_api/edit/shop/balance';
@@ -13,13 +15,14 @@ const UPDATE_BALANCE_API =
 // 是否收到信息要更新金额
 chrome.runtime.onMessage.addListener((data, _sender, sendResponse) => {
   const { type, sendMessageNum } = data;
-  sendResponse('success');
-
-  if (type === GET_BALANCE_MESSAGE_KEY) {
-    const { alarmIsOpen, createTime } = data.data;
-    setTimeout(() => {
-      fetchBalance(getBalance(), alarmIsOpen, createTime, sendMessageNum);
-    }, 3000);
+  if (isOnload) {
+    sendResponse('success');
+    if (type === GET_BALANCE_MESSAGE_KEY) {
+      const { alarmIsOpen, createTime } = data.data;
+      setTimeout(() => {
+        fetchBalance(getBalance(), alarmIsOpen, createTime, sendMessageNum);
+      }, 3000);
+    }
   }
 });
 
@@ -129,6 +132,10 @@ const saveData = (
   });
 };
 
-setTimeout(() => {
-  fetchBalance(getBalance(), true, false, 10);
-}, 2000);
+window.onbeforeunload = () => {
+  isOnload = false;
+};
+
+window.onload = () => {
+  isOnload = true;
+};
