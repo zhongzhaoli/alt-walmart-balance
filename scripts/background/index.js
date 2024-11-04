@@ -11,7 +11,7 @@ export const createBalanceMonitor = async () => {
   const alarm = await chrome.alarms.get(BALANCE_ALARM_NAME);
   if (typeof alarm === 'undefined') {
     chrome.alarms.create(BALANCE_ALARM_NAME, {
-      periodInMinutes: 1,
+      periodInMinutes: 60,
     });
     refreshTab();
   }
