@@ -1,8 +1,7 @@
 import {
   GET_BALANCE_MESSAGE_KEY,
-  UPDATE_VIEW_DATA,
   BALANCE_ALARM_NAME,
-  GET_VIEW_DATA,
+  CLOSE_TAB,
 } from './constants.js';
 import { refreshTab, generateVisualNumber } from './utils.js';
 
@@ -25,6 +24,18 @@ export const removeBalanceMonitor = async () => {
   }
 };
 
+chrome.runtime.onMessage.addListener((request) => {
+  const { type } = request;
+  // 关闭所有网页
+  if (type === CLOSE_TAB) {
+    chrome.tabs.query({}, function (tabs) {
+      for (let tab of tabs) {
+        chrome.tabs.remove(tab.id);
+      }
+    });
+  }
+});
+
 // 监听金额定时器
 chrome.alarms.onAlarm.addListener(refreshTab);
 
@@ -32,23 +43,6 @@ chrome.alarms.onAlarm.addListener(refreshTab);
 chrome.runtime.onInstalled.addListener(async () => {
   await removeBalanceMonitor();
   createBalanceMonitor();
-});
-
-chrome.runtime.onMessage.addListener((data) => {
-  const { type } = data;
-  if (type === UPDATE_VIEW_DATA) {
-    chrome.storage.local.set({
-      VIEW_DATA: data.data,
-    });
-  }
-  if (type === GET_VIEW_DATA) {
-    chrome.storage.local.get(['VIEW_DATA'], (result) => {
-      chrome.runtime.sendMessage({
-        type: GET_VIEW_DATA,
-        data: result.VIEW_DATA,
-      });
-    });
-  }
 });
 
 chrome.webRequest.onResponseStarted.addListener(

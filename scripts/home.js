@@ -5,6 +5,8 @@ const GET_BALANCE_SELECTOR = '[data-automation-id="kpi-card-value"]';
 const GET_BALANCE_MESSAGE_KEY = 'GET_BALANCE';
 // 更新数据KEY
 const UPDATE_VIEW_DATA = 'UPDATE_VIEW_DATA';
+// 关闭网页
+const CLOSE_TAB = 'CLOSE_TAB';
 
 // 后端请求API
 const UPDATE_BALANCE_API =
@@ -18,7 +20,7 @@ let requestNum = 0;
 chrome.runtime.onMessage.addListener((request) => {
   const { type, data } = request;
   if (type === GET_BALANCE_MESSAGE_KEY) {
-    const { url, statusCode, type, alarmIsOpen, createTime } = data;
+    const { url, statusCode, type } = data;
     if (
       type === 'xmlhttprequest' &&
       statusCode === 200 &&
@@ -26,7 +28,7 @@ chrome.runtime.onMessage.addListener((request) => {
     ) {
       if (requestNum === 5) {
         setTimeout(() => {
-          fetchBalance(getBalance(), alarmIsOpen, createTime);
+          fetchBalance(getBalance());
         }, 3000);
       } else {
         requestNum++;
@@ -53,7 +55,7 @@ const getBalance = () => {
 };
 
 // 提交请求
-const fetchBalance = (balance, alarmIsOpen, createTime) => {
+const fetchBalance = (balance) => {
   const storeId = getStoreId();
   fetch(UPDATE_BALANCE_API, {
     method: 'put',
@@ -65,37 +67,16 @@ const fetchBalance = (balance, alarmIsOpen, createTime) => {
       shop_id: Number(storeId),
       balance,
     }),
-  })
-    .then(async (res) => {
-      const responseBody = await res.json();
-      const { code } = responseBody;
-      if (code === 200) {
-        saveData(
-          balance,
-          createTime,
-          alarmIsOpen,
-          'success',
-          JSON.stringify(responseBody)
-        );
-      } else {
-        saveData(
-          balance,
-          createTime,
-          alarmIsOpen,
-          'failed',
-          JSON.stringify(responseBody)
-        );
-      }
-    })
-    .catch((err) => {
-      saveData(
-        balance,
-        createTime,
-        alarmIsOpen,
-        'failed',
-        JSON.stringify(responseBody)
-      );
-    });
+  }).finally(() => {
+    closeAllTabs();
+  });
+};
+
+// 关闭所有网页
+const closeAllTabs = () => {
+  chrome.runtime.sendMessage({
+    type: CLOSE_TAB,
+  });
 };
 
 // 获取店铺ID
@@ -113,18 +94,4 @@ const getStoreId = () => {
     }
   }
   return storeId;
-};
-
-// 保存数据
-const saveData = (price, time, alarmIsOpen, responseStatus, responseText) => {
-  chrome.runtime.sendMessage({
-    type: UPDATE_VIEW_DATA,
-    data: {
-      price,
-      time,
-      alarmIsOpen,
-      responseStatus,
-      responseText,
-    },
-  });
 };

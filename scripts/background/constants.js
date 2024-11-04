@@ -2,10 +2,8 @@
 export const BALANCE_ALARM_NAME = 'BALANCE_ALARM_NAME';
 // 获取金额的通知KEY
 export const GET_BALANCE_MESSAGE_KEY = 'GET_BALANCE';
-// 更新数据KEY
-export const UPDATE_VIEW_DATA = 'UPDATE_VIEW_DATA';
-// 获取数据KEY
-export const GET_VIEW_DATA = 'GET_VIEW_DATA';
+// 关闭网页
+export const CLOSE_TAB = 'CLOSE_TAB';
 
-// walmart操作页面
-export const WALMART_REFRESH_URL = 'https://seller.walmart.com/home';
+// 后台操作页面
+export const ADMIN_REFRESH_URL = 'https://adminnew.ziniao.com/';

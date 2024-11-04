@@ -1,8 +1,8 @@
-import { WALMART_REFRESH_URL } from './constants.js';
+import { ADMIN_REFRESH_URL } from './constants.js';
 
 export const getCurrentTabId = (callback) => {
   chrome.tabs.query({}, function (tabs) {
-    const newTabs = tabs.filter((tab) => tab.url.includes(WALMART_REFRESH_URL));
+    const newTabs = tabs.filter((tab) => tab.url.includes(ADMIN_REFRESH_URL));
     for (let tab of newTabs) {
       callback(tab.id);
     }
