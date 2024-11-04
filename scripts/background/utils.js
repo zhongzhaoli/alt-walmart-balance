@@ -1,33 +1,12 @@
-import { WALMART_URL } from './constants.js';
+import { WALMART_REFRESH_URL } from './constants.js';
 
 export const getCurrentTabId = (callback) => {
   chrome.tabs.query({}, function (tabs) {
-    const newTabs = tabs.filter((tab) => tab.url.includes(WALMART_URL));
+    const newTabs = tabs.filter((tab) => tab.url.includes(WALMART_REFRESH_URL));
     for (let tab of newTabs) {
       callback(tab.id);
     }
   });
-};
-
-export const sendMessageToTab = (message) => {
-  let num = 1;
-  let timer = null;
-  timer = setInterval(() => {
-    getCurrentTabId(async (tabId) => {
-      try {
-        const response = await chrome.tabs.sendMessage(tabId, {
-          ...message,
-          sendMessageNum: num,
-        });
-        if (response && response === 'success') {
-          clearInterval(timer);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    });
-    num++;
-  }, 1000);
 };
 
 export const refreshTab = () => {

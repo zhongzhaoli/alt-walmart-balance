@@ -7,9 +7,5 @@ export const UPDATE_VIEW_DATA = 'UPDATE_VIEW_DATA';
 // 获取数据KEY
 export const GET_VIEW_DATA = 'GET_VIEW_DATA';
 
-// 余额请求URL
-export const BALANCE_API_URL =
-  'https://seller.walmart.com/aurora/v1/finance/v2/payment/settlementDetails';
-
 // walmart操作页面
-export const WALMART_URL = 'https://seller.walmart.com/payments/statements';
+export const WALMART_REFRESH_URL = 'https://seller.walmart.com/home';

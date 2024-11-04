@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ALT 检测插件",
   "description": "ALT - 数据监控插件",
-  "version": "1.9.1",
+  "version": "2.1.7",
   "action": {
     "default_title": "ALT - 数据监控插件",
     "default_popup": "popup/index.html",
@@ -23,10 +23,12 @@
   },
   "content_scripts": [
     {
-      "js": ["scripts/content.js"],
-      "css": ["styles/content.css"],
-      "matches": ["https://seller.walmart.com/payments/statements/*"],
-      "run_at": "document_start"
+      "js": ["scripts/login.js"],
+      "matches": ["https://login.account.wal-mart.com/*"]
+    },
+    {
+      "js": ["scripts/home.js"],
+      "matches": ["https://seller.walmart.com/home"]
     }
   ],
   "background": {
