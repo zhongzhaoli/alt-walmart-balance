@@ -3,7 +3,7 @@ import {
   BALANCE_ALARM_NAME,
   CLOSE_TAB,
 } from './constants.js';
-import { refreshTab, generateVisualNumber } from './utils.js';
+import { refreshTab } from './utils.js';
 
 // 创建金额监控
 export const createBalanceMonitor = async () => {
@@ -47,19 +47,14 @@ chrome.runtime.onInstalled.addListener(async () => {
 
 chrome.webRequest.onResponseStarted.addListener(
   async (details) => {
-    const alarm = await chrome.alarms.get(BALANCE_ALARM_NAME);
-    let isOpen = typeof alarm !== 'undefined' ? true : false;
     chrome.tabs.sendMessage(details.tabId, {
       type: GET_BALANCE_MESSAGE_KEY,
-      data: {
-        ...details,
-        alarmIsOpen: isOpen,
-        createTime: generateVisualNumber(),
-      },
+      data: details,
     });
   },
   {
     urls: ['<all_urls>'],
+    types: ['xmlhttprequest'],
   },
   []
 );
