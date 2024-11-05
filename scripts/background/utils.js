@@ -1,4 +1,4 @@
-import { ADMIN_REFRESH_URL } from './constants.js';
+import { ADMIN_REFRESH_URL, ADMIN_CLOSE_URL } from './constants.js';
 
 export const getCurrentTabId = (callback) => {
   chrome.tabs.query({}, function (tabs) {
@@ -15,6 +15,16 @@ export const refreshTab = () => {
       await chrome.tabs.reload(tabId);
     } catch (err) {
       console.log(err);
+    }
+  });
+};
+
+export const closeTab = () => {
+  chrome.tabs.query({}, function (tabs) {
+    for (let tab of tabs) {
+      if (!tab.url.includes(ADMIN_CLOSE_URL)) {
+        chrome.tabs.remove(tab.id);
+      }
     }
   });
 };

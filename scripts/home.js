@@ -3,8 +3,6 @@ const GET_BALANCE_SELECTOR = '[data-automation-id="kpi-card-value"]';
 
 // 获取金额的通知KEY
 const GET_BALANCE_MESSAGE_KEY = 'GET_BALANCE';
-// 更新数据KEY
-const UPDATE_VIEW_DATA = 'UPDATE_VIEW_DATA';
 // 关闭网页
 const CLOSE_TAB = 'CLOSE_TAB';
 
@@ -55,7 +53,7 @@ const getBalance = () => {
 };
 
 // 提交请求
-const fetchBalance = (balance) => {
+const fetchBalance = async (balance) => {
   const storeId = getStoreId();
   fetch(UPDATE_BALANCE_API, {
     method: 'put',
@@ -67,7 +65,7 @@ const fetchBalance = (balance) => {
       shop_id: Number(storeId),
       balance,
     }),
-  }).finally(() => {
+  }).finally(async () => {
     closeAllTabs();
   });
 };

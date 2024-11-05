@@ -3,10 +3,10 @@ import {
   BALANCE_ALARM_NAME,
   CLOSE_TAB,
 } from './constants.js';
-import { refreshTab } from './utils.js';
+import { refreshTab, closeTab } from './utils.js';
 
-// 创建金额监控
-export const createBalanceMonitor = async () => {
+// 刷新页面定时器
+export const createRefreshAlarm = async () => {
   const alarm = await chrome.alarms.get(BALANCE_ALARM_NAME);
   if (typeof alarm === 'undefined') {
     chrome.alarms.create(BALANCE_ALARM_NAME, {
@@ -15,34 +15,30 @@ export const createBalanceMonitor = async () => {
     refreshTab();
   }
 };
-
-// 移除金额监控
-export const removeBalanceMonitor = async () => {
+export const removeRefreshAlarm = async () => {
   const alarm = await chrome.alarms.get(BALANCE_ALARM_NAME);
   if (typeof alarm !== 'undefined') {
     await chrome.alarms.clear(BALANCE_ALARM_NAME);
   }
 };
 
+// 插件初始化
+chrome.runtime.onInstalled.addListener(async () => {
+  await removeRefreshAlarm();
+  createRefreshAlarm();
+});
+
+// 定时器回调
+chrome.alarms.onAlarm.addListener(async (alarm) => {
+  if (alarm.name === BALANCE_ALARM_NAME) refreshTab();
+});
+
 chrome.runtime.onMessage.addListener((request) => {
   const { type } = request;
   // 关闭所有网页
   if (type === CLOSE_TAB) {
-    chrome.tabs.query({}, function (tabs) {
-      for (let tab of tabs) {
-        chrome.tabs.remove(tab.id);
-      }
-    });
+    closeTab();
   }
-});
-
-// 监听金额定时器
-chrome.alarms.onAlarm.addListener(refreshTab);
-
-// 插件初始化
-chrome.runtime.onInstalled.addListener(async () => {
-  await removeBalanceMonitor();
-  createBalanceMonitor();
 });
 
 chrome.webRequest.onResponseStarted.addListener(

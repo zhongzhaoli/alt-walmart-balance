@@ -7,3 +7,6 @@ export const CLOSE_TAB = 'CLOSE_TAB';
 
 // 后台操作页面
 export const ADMIN_REFRESH_URL = 'https://adminnew.ziniao.com/';
+
+// 不可关闭的页面
+export const ADMIN_CLOSE_URL = 'ziniao.com/';
