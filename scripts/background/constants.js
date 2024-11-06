@@ -4,6 +4,8 @@ export const BALANCE_ALARM_NAME = 'BALANCE_ALARM_NAME';
 export const GET_BALANCE_MESSAGE_KEY = 'GET_BALANCE';
 // 关闭网页
 export const CLOSE_TAB = 'CLOSE_TAB';
+// 关闭其他登录页面
+export const CLOSE_OTHER_LOGIN_KEY = 'CLOSE_OTHER_LOGIN';
 
 // 后台操作页面
 export const ADMIN_REFRESH_URL = 'https://adminnew.ziniao.com/';

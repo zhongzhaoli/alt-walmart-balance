@@ -5,8 +5,12 @@ const SELECTOR_USERNAME = '[data-automation-id="uname"]';
 // 密码输入框的选择器
 const SELECTOR_PASSWORD = '[data-automation-id="pwd"]';
 
+// 关闭其他登录页面
+const CLOSE_OTHER_LOGIN_KEY = 'CLOSE_OTHER_LOGIN';
+
 let timer = null;
 window.onload = function () {
+  chrome.runtime.sendMessage({ type: CLOSE_OTHER_LOGIN_KEY });
   timer = setInterval(() => {
     const element = document.querySelector(SELECTOR_CONDITION);
     const username = document.querySelector(SELECTOR_USERNAME);
