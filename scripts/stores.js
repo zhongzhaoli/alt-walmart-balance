@@ -60,8 +60,8 @@ const openStore = () => {
       // document.getElementsByClassName('startbtn')
     );
     storeLen = divList.length;
-    handle();
     // 一分钟打开一个店铺
+    handle();
     timter = setInterval(() => {
       handle();
     }, 60000);

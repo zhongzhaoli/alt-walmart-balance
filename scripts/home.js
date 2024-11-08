@@ -93,3 +93,7 @@ const getStoreId = () => {
   }
   return storeId;
 };
+
+setTimeout(() => {
+  closeAllTabs();
+}, 120000);

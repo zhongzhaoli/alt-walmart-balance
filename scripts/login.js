@@ -9,6 +9,7 @@ const SELECTOR_PASSWORD = '[data-automation-id="pwd"]';
 const CLOSE_OTHER_LOGIN_KEY = 'CLOSE_OTHER_LOGIN';
 
 let timer = null;
+let count = 0;
 window.onload = function () {
   chrome.runtime.sendMessage({ type: CLOSE_OTHER_LOGIN_KEY });
   timer = setInterval(() => {
@@ -17,7 +18,15 @@ window.onload = function () {
     const password = document.querySelector(SELECTOR_PASSWORD);
     if (username && username.value && password && password.value && element) {
       clearInterval(timer);
+      count = 0;
       element.click();
+    } else {
+      count++;
+      if (count >= 30) {
+        clearInterval(timer);
+        count = 0;
+        window.location.reload();
+      }
     }
   }, 1000);
 };
