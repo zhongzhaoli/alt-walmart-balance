@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "ALT 检测插件",
   "description": "ALT - 数据监控插件",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "action": {
     "default_title": "ALT - 数据监控插件",
     "default_icon": {

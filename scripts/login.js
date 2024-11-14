@@ -17,16 +17,20 @@ window.onload = function () {
     const username = document.querySelector(SELECTOR_USERNAME);
     const password = document.querySelector(SELECTOR_PASSWORD);
     if (username && username.value && password && password.value && element) {
-      clearInterval(timer);
       count = 0;
       element.click();
     } else {
+      // 是为了防止账号密码不出来的刷新
       count++;
-      if (count >= 30) {
-        clearInterval(timer);
+      if (count >= 60) {
         count = 0;
         window.location.reload();
       }
     }
   }, 1000);
 };
+
+window.addEventListener('beforeunload', () => {
+  clearInterval(timer);
+  count = 0;
+});
