@@ -14,6 +14,21 @@ const UPDATE_BALANCE_API =
 const BALANCE_API_URL =
   'https://seller.walmart.com/aurora/v1/auroraHomePageService/gql';
 
+// 超时自动关闭防止内存问题
+const autoCloseTimer = setTimeout(() => {
+  closeAllTabs();
+}, 120000);
+
+// 页面错误
+const pageErrorTimer = setInterval(() => {
+  const error = document.querySelector("[alt='Error Image']");
+  if (error) {
+    clearTimeout(autoCloseTimer);
+    clearInterval(pageErrorTimer);
+    window.location.reload();
+  }
+}, 1000);
+
 let requestNum = 0;
 chrome.runtime.onMessage.addListener((request) => {
   const { type, data } = request;
@@ -66,12 +81,16 @@ const fetchBalance = async (balance) => {
       balance,
     }),
   }).finally(async () => {
+    clearTimeout(autoCloseTimer);
+    clearInterval(pageErrorTimer);
     closeAllTabs();
   });
 };
 
 // 关闭所有网页
 const closeAllTabs = () => {
+  clearTimeout(autoCloseTimer);
+  clearInterval(pageErrorTimer);
   chrome.runtime.sendMessage({
     type: CLOSE_TAB,
   });
@@ -93,7 +112,3 @@ const getStoreId = () => {
   }
   return storeId;
 };
-
-setTimeout(() => {
-  closeAllTabs();
-}, 120000);
