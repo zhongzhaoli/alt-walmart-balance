@@ -8,7 +8,7 @@ const CLOSE_TAB = 'CLOSE_TAB';
 
 // 后端请求API
 const UPDATE_BALANCE_API =
-  'https://altoa.api.altspicerver.com/v1/walmart_api/edit/shop/balance';
+  'https://altoa.api.altspicerver.com/v1/walmart/edit/shop/balance';
 
 // Walmart 获取余额URL
 const BALANCE_API_URL =

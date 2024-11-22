@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #num {
+      font-size: 60px;
+      font-weight: bold;
+    }
+
+    #history {
+      height: 400px;
+      overflow: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="num"></div>
+  <div id="history">
+
+  </div>
+  <script>
+    let num = 0;
+
+    // setNumToHtml();
+    // setInterval(() => {
+    //   num++;
+    //   setNumToHtml();
+    //   setHistoryToHtml();
+    // }, 1000)
+
+
+    function setHistoryToHtml() {
+      const now = new Date();
+      const min = now.getMinutes();
+      const sec = now.getSeconds();
+      const miniSec = now.getMilliseconds();
+      const history = document.createElement('div');
+      history.innerHTML = `${num}：${min}分${sec}秒${miniSec}`;
+      const targetDiv = document.getElementById("history");
+      const firstChild = targetDiv.firstChild;
+      targetDiv.insertBefore(history, firstChild);
+    }
+    function setNumToHtml() {
+      document.getElementById('num').innerHTML = num;
+    }
+
+
+    // 使用requestAnimationFrame代替定时器解决定时器的异常问题
+    // callback指的是当一秒之后 你需要让这个方法执行的函数 param是这个函数的参数
+    // 时间长度可以更改 elapsedTime 
+    function oneSecondTimer(callback, param) {
+      let startTime = null
+      function tick(timestamp) {
+        if (!startTime) {
+          startTime = timestamp
+        }
+        const elapsedTime = timestamp - startTime
+        if (elapsedTime >= 1000) {
+          callback(param)
+          startTime = null;
+        }
+        requestAnimationFrame(tick)
+      }
+      requestAnimationFrame(tick)
+    }
+    oneSecondTimer(() => {
+      num++;
+      setNumToHtml();
+      setHistoryToHtml();
+    });
+  </script>
+</body>
+
+</html>
